@@ -1,7 +1,7 @@
 import "./index.css"
 import "./App.css"
 import { useState, useEffect } from "react"
-import { saveNewJoke, getAllJokes } from "./jokeService"
+import { saveNewJoke, getAllJokes, updateJoke, deleteJoke } from "./jokeService"
 import stevePic from "./assets/steve.png"
 
 // const useState = defaultVal => {
@@ -19,6 +19,7 @@ export const App = () => {
   const [allJokes, setAllJokes] = useState([])
   const [untoldJokes, setUntoldJokes] = useState([])
   const [toldJokes, setToldJokes] = useState([])
+
   console.log({ newJokeEntry })
 
   const fetchAndSetAllJokes = () => {
@@ -68,7 +69,27 @@ export const App = () => {
           {untoldJokes.map(joke => {
             return (
               <section className="joke-list-item" key={`untoldJoke -- ${joke.id}`}>
-                <p className="joke-list-item-text">{joke.text}</p>
+                <p className="joke-list-item-text">
+                  {joke.text}
+                </p>
+                <div className="joke-list-action-delete">
+                  <button onClick={() => {
+                    console.log(joke.id)
+                    deleteJoke(joke.id)
+                    fetchAndSetAllJokes
+                  }}>X</button>
+                </div>
+                <div className="joke-list-action-toggle">
+                  <button onClick={() => {
+                    let editedJoke = {
+                      "id": joke.id,
+                      "text":joke.text,
+                      "told": true,
+                    }
+                    updateJoke(editedJoke)
+                    fetchAndSetAllJokes()
+                  }}>?</button>
+                </div>
               </section>
             )
             })
@@ -82,6 +103,24 @@ export const App = () => {
             return (
               <section className="joke-list-item" key={`toldJoke -- ${joke.id}`}>
                 <p className="joke-list-item-text">{joke.text}</p>
+                <div className="joke-list-action-delete">
+                  <button onClick={() => {
+                    console.log(joke.id)
+                    deleteJoke(joke.id)
+                    fetchAndSetAllJokes()
+                  }}>X</button>
+                </div>
+                <div className="joke-list-action-toggle">
+                  <button onClick={() => {
+                    let editedJoke = {
+                      "id": joke.id,
+                      "text":joke.text,
+                      "told": false,
+                    }
+                    updateJoke(editedJoke)
+                    fetchAndSetAllJokes()
+                  }}>?</button>
+                </div>
               </section>
             )
             })
